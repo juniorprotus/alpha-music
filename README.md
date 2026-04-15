@@ -68,5 +68,5 @@ This project is for educational and promotional purposes.
 
 ## 👨‍💻 Developer
 
-Built by **Protus Onyango**  
+Built by **juniorprotus** ([github.com/juniorprotus](https://github.com/juniorprotus))  
 Passionate about building digital platforms for artists and creators.

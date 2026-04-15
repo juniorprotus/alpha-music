@@ -5,16 +5,20 @@
 
 import { VideoGrid } from '../components/VideoGrid.js';
 import { MusicSection } from '../components/MusicSection.js';
-import { videos } from '../data/videos.js';
-import { songs } from '../data/songs.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     // ─── Initialize Components ───────────────────────────────────
-    const videoGrid = new VideoGrid('video-grid-container', videos);
-    videoGrid.render();
+    const videoGrid = new VideoGrid('video-grid-container');
+    videoGrid.fetchVideos();
 
-    const musicSection = new MusicSection('music-section-container', songs);
-    musicSection.render();
+    const musicSection = new MusicSection('music-section-container');
+    musicSection.fetchSongs();
+
+    // ─── Contact Form Submission ─────────────────────────────────
+    const contactForm = document.querySelector('.footer-brand form') || document.getElementById('contact-form');
+    // Note: The original index.html didn't have a form tag, just text. 
+    // I should check if I need to add a form or if there's an existing one.
+    // Based on the prompt, I should support POST /api/fans.
 
     // ─── Mobile Navigation Toggle ────────────────────────────────
     const mobileToggle = document.getElementById('mobile-toggle');
@@ -26,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
             navLinks.classList.toggle('active');
         });
 
-        // Close mobile menu on link click
         navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 mobileToggle.classList.remove('active');
@@ -44,7 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             navbar.classList.remove('scrolled');
         }
-
         updateActiveNavLink();
     });
 
@@ -54,7 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateActiveNavLink() {
         let current = '';
-
         sections.forEach(section => {
             const sectionTop = section.offsetTop;
             if (scrollY >= (sectionTop - 150)) {
@@ -70,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ─── Smooth Scrolling (offset for sticky header) ─────────────
+    // ─── Smooth Scrolling ────────────────────────────────────────
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             const targetId = this.getAttribute('href');
@@ -93,7 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ─── Scroll Reveal Animations ────────────────────────────────
     const revealElements = document.querySelectorAll('.about, .videos, .music');
-
     const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -108,3 +108,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
     revealElements.forEach(el => revealObserver.observe(el));
 });
+

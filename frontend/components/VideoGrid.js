@@ -5,16 +5,35 @@
  */
 
 export class VideoGrid {
-    constructor(containerId, videos = []) {
+    constructor(containerId, apiUrl = 'http://localhost:5000/api/videos') {
         this.container = document.getElementById(containerId);
-        this.videos = videos;
+        this.apiUrl = apiUrl;
+        this.videos = [];
         this.activeFilter = 'all';
+        this.isLoading = true;
     }
 
     /**
-     * Creates the HTML for the filter tabs.
-     * @returns {string} HTML string for the filter bar.
+     * Fetches videos from the API.
      */
+    async fetchVideos() {
+        this.isLoading = true;
+        this.render();
+
+        try {
+            // Note: In Phase 3, we fetch all and filter client-side or use basic query
+            const response = await fetch(this.apiUrl);
+            if (!response.ok) throw new Error('Failed to fetch videos');
+            this.videos = await response.json();
+        } catch (error) {
+            console.error('API Error:', error);
+            this.videos = [];
+        } finally {
+            this.isLoading = false;
+            this.render();
+        }
+    }
+
     createFilterTabs() {
         const categories = [
             { key: 'all', label: 'All Releases' },
@@ -34,18 +53,18 @@ export class VideoGrid {
         return `<div class="video-tabs" id="video-tabs">${tabs}</div>`;
     }
 
-    /**
-     * Creates the HTML for a single video card.
-     * @param {Object} video - Video data object.
-     * @returns {string} HTML string for the video card.
-     */
     createVideoCard(video) {
         const aspectClass = video.isShort ? 'short-format' : '';
+        // Map DB fields to component needs
+        const embedUrl = video.youtube_url.includes('embed') 
+            ? video.youtube_url 
+            : `https://www.youtube.com/embed/${video.youtube_url.split('v=')[1] || video.youtube_url.split('/').pop()}`;
+
         return `
             <div class="video-card" data-video-id="${video.id}" data-category="${video.category}">
                 <div class="video-wrapper ${aspectClass}">
                     <iframe
-                        src="${video.embedUrl}"
+                        src="${embedUrl}"
                         title="${video.title}"
                         frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -62,11 +81,6 @@ export class VideoGrid {
         `;
     }
 
-    /**
-     * Formats a category slug into a human-readable label.
-     * @param {string} category - Category slug.
-     * @returns {string} Formatted category name.
-     */
     formatCategory(category) {
         const labels = {
             'music-video': 'MV',
@@ -85,7 +99,7 @@ export class VideoGrid {
                 if (!tab) return;
 
                 this.activeFilter = tab.dataset.filter;
-                this.render();
+                this.render(); // Filter client-side for videos in this version
             });
         }
     }
@@ -98,10 +112,20 @@ export class VideoGrid {
     render() {
         if (!this.container) return;
         
+        if (this.isLoading) {
+            this.container.innerHTML = `
+                ${this.createFilterTabs()}
+                <div class="loading-state">
+                    <p>Loading sequences...</p>
+                </div>
+            `;
+            return;
+        }
+
         const filtered = this.getFilteredVideos();
         const videosHtml = filtered.length > 0
             ? filtered.map(v => this.createVideoCard(v)).join('')
-            : '<p class="no-results">No videos found in this category.</p>';
+            : '<p class="no-results">No videos found in the database.</p>';
 
         this.container.innerHTML = `
             ${this.createFilterTabs()}
@@ -113,4 +137,5 @@ export class VideoGrid {
         this.bindEvents();
     }
 }
+
 

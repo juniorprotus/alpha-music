@@ -18,6 +18,32 @@ export class MusicSection {
     }
 
     /**
+     * Initializes the YouTube IFrame Player API.
+     */
+    initYouTubeApi() {
+        if (window.YT && window.YT.Player) {
+            this.isApiReady = true;
+            return;
+        }
+
+        if (!document.getElementById('youtube-api-script')) {
+            const tag = document.createElement('script');
+            tag.id = 'youtube-api-script';
+            tag.src = "https://www.youtube.com/iframe_api";
+            const firstScriptTag = document.getElementsByTagName('script')[0];
+            if (firstScriptTag && firstScriptTag.parentNode) {
+                firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+            } else {
+                document.head.appendChild(tag);
+            }
+        }
+
+        window.onYouTubeIframeAPIReady = () => {
+            this.isApiReady = true;
+        };
+    }
+
+    /**
      * Creates or gets the hidden player container.
      */
     ensurePlayer(youtubeId) {

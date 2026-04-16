@@ -258,7 +258,7 @@
     color: var(--color-accent-gold);
     opacity: 0.2;
     position: absolute;
-    top: 5px; /* Adjusted to keep it near text */
+    top: -10px; /* Lifted higher from the text */
     left: 50%;
     transform: translateX(-50%);
     font-family: var(--font-heading);

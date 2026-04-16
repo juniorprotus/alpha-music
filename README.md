@@ -31,7 +31,7 @@ You can host this platform for free using **Vercel**:
 3. **Important**: In the Vercel Settings, add these **Environment Variables**:
    - `SUPABASE_URL`: Your Supabase Project URL.
    - `SUPABASE_KEY`: Your Supabase Anon/Public Key.
-4. Click **Deploy**. Your site will be live!
+4. Click **Deploy**. Your site will be live!.
 
 ## 📂 Key Features
 - 🎹 **Persistent Audio Player**: Listen to tracks while browsing.

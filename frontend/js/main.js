@@ -24,20 +24,28 @@ document.addEventListener('DOMContentLoaded', () => {
     // ─── Render Tour Section ───
     const tourContainer = document.getElementById('tour-grid-container');
     if (tourContainer) {
-        tourContainer.innerHTML = events.map(e => `
-            <div class="tour-card" data-status="${e.status}">
-                <div class="tour-info">
-                    <div class="tour-date">${new Date(e.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric'})}</div>
-                    <div class="tour-title">${e.title}</div>
-                    <div class="tour-venue">${e.venue} • ${e.location}</div>
+        if (events.length > 0) {
+            tourContainer.innerHTML = events.map(e => `
+                <div class="tour-card" data-status="${e.status}">
+                    <div class="tour-info">
+                        <div class="tour-date">${new Date(e.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
+                        <div class="tour-title">${e.title}</div>
+                        <div class="tour-venue">${e.venue} • ${e.location}</div>
+                    </div>
+                    <div class="tour-actions">
+                        ${e.status === 'upcoming'
+                            ? `<span class="tour-status upcoming">Tickets</span>`
+                            : `<span class="tour-status past">Past</span>`}
+                    </div>
                 </div>
-                <div class="tour-actions">
-                    ${e.status === 'upcoming' 
-                        ? `<span class="tour-status upcoming">Tickets</span>` 
-                        : `<span class="tour-status past">Past</span>`}
+            `).join('');
+        } else {
+            tourContainer.innerHTML = `
+                <div class="text-center py-5">
+                    <p class="text-muted">No upcoming shows scheduled. Check back later for updates!</p>
                 </div>
-            </div>
-        `).join('');
+            `;
+        }
     }
 
     // ─── Render Merch Section ───

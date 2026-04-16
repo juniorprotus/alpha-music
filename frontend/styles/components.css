@@ -34,6 +34,24 @@
     margin: 0 auto;
 }
 
+.nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.logo-icon {
+    width: 28px;
+    height: 28px;
+    stroke: var(--color-accent-gold);
+    fill: rgba(212, 175, 55, 0.3); /* Transparent gold inner fill */
+    transition: transform 0.3s ease;
+}
+
+.nav-logo:hover .logo-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
 .logo-text {
     font-family: var(--font-heading);
     font-weight: 900;
@@ -1258,16 +1276,17 @@
     color: var(--color-accent-green);
 }
 
-.gp-play-btn {
+.player-controls .gp-play-btn {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: var(--color-text);
+    background: var(--color-accent-gold) !important;
     color: var(--color-bg) !important;
 }
 
-.gp-play-btn:hover {
+.player-controls .gp-play-btn:hover {
     transform: scale(1.1);
+    background: var(--color-accent-green) !important;
 }
 
 .player-close {

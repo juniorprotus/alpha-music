@@ -29,6 +29,11 @@ export class GlobalPlayer {
 
         this.bindEvents();
         this.initYouTubeApi();
+        
+        // Load the first song immediately so the player is visible on page load
+        if (this.songs && this.songs.length > 0) {
+            this.loadCurrentSong(false);
+        }
     }
 
     initYouTubeApi() {

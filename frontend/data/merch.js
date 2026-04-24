@@ -24,5 +24,19 @@ export const merch = [
         price: 'KSh 1,200',
         imageUrl: 'images/merch-hat.png',
         status: 'coming-soon'
+    },
+    {
+        id: 'm4',
+        title: 'Alpha Silicon Wristband',
+        price: 'KSh 500',
+        imageUrl: 'images/merch-wristband.png',
+        status: 'in-stock'
+    },
+    {
+        id: 'm5',
+        title: 'Eco-Alpha Tote Bag',
+        price: 'KSh 1,800',
+        imageUrl: 'images/merch-tote.png',
+        status: 'in-stock'
     }
 ];

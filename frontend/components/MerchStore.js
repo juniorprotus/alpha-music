@@ -9,6 +9,8 @@ export class MerchStore {
         this.merch = merch;
         this.modal = document.getElementById('checkout-modal');
         this.form = document.getElementById('checkout-form');
+        this.step1 = document.getElementById('checkout-step-1');
+        this.step2 = document.getElementById('checkout-step-2');
         this.selectedItem = null;
         
         this.init();
@@ -24,6 +26,23 @@ export class MerchStore {
             window.addEventListener('click', (e) => {
                 if (e.target === this.modal) this.closeModal();
             });
+
+            // Step Navigation
+            const proceedBtn = document.getElementById('proceed-to-order');
+            if (proceedBtn) {
+                proceedBtn.addEventListener('click', () => {
+                    this.step1.style.display = 'none';
+                    this.step2.style.display = 'block';
+                });
+            }
+
+            const backBtn = document.getElementById('back-to-preview');
+            if (backBtn) {
+                backBtn.addEventListener('click', () => {
+                    this.step2.style.display = 'none';
+                    this.step1.style.display = 'block';
+                });
+            }
         }
 
         if (this.form) {
@@ -34,24 +53,33 @@ export class MerchStore {
     render() {
         if (!this.container) return;
 
-        this.container.innerHTML = this.merch.map(m => `
-            <div class="merch-card" data-id="${m.id}">
-                <div class="merch-badge">${m.status.replace('-', ' ').toUpperCase()}</div>
-                <div class="merch-img-container">
-                    <img src="${m.image_url || m.imageUrl}" alt="${m.title}" loading="lazy">
+        this.container.innerHTML = this.merch.map(m => {
+            const isSoldOut = (m.stockCount !== undefined && m.stockCount <= 0);
+            return `
+                <div class="merch-card ${isSoldOut ? 'sold-out' : ''}" data-id="${m.id}">
+                    <div class="merch-badge">${isSoldOut ? 'SOLD OUT' : m.status.replace('-', ' ').toUpperCase()}</div>
+                    <div class="merch-img-container">
+                        <img src="${m.image_url || m.imageUrl}" alt="${m.title}" loading="lazy" style="${isSoldOut ? 'filter: grayscale(1);' : ''}">
+                    </div>
+                    <div class="merch-details">
+                        <h3 class="merch-title">${m.title}</h3>
+                        <div class="merch-price">${m.price}</div>
+                        ${isSoldOut ? `
+                            <button class="btn btn-outline" style="width: 100%; opacity: 0.5; cursor: not-allowed;" disabled>Out of Stock</button>
+                        ` : `
+                            <button class="btn btn-outline buy-now-btn" style="width: 100%;" 
+                                data-id="${m.id}" 
+                                data-title="${m.title}" 
+                                data-price="${m.price}"
+                                data-image="${m.image_url || m.imageUrl}"
+                                data-stock="${m.stockCount || 0}">
+                                View / Order
+                            </button>
+                        `}
+                    </div>
                 </div>
-                <div class="merch-details">
-                    <h3 class="merch-title">${m.title}</h3>
-                    <div class="merch-price">${m.price}</div>
-                    <button class="btn btn-outline buy-now-btn" style="width: 100%;" 
-                        data-id="${m.id}" 
-                        data-title="${m.title}" 
-                        data-price="${m.price}">
-                        Pre-Order / View
-                    </button>
-                </div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
 
         // Link events
         this.container.querySelectorAll('.buy-now-btn').forEach(btn => {
@@ -59,7 +87,9 @@ export class MerchStore {
                 const item = {
                     id: btn.dataset.id,
                     title: btn.dataset.title,
-                    price: btn.dataset.price
+                    price: btn.dataset.price,
+                    image: btn.dataset.image,
+                    stock: parseInt(btn.dataset.stock)
                 };
                 this.openCheckout(item);
             });
@@ -68,10 +98,27 @@ export class MerchStore {
 
     openCheckout(item) {
         this.selectedItem = item;
-        document.getElementById('checkout-item-name').textContent = item.title;
-        document.getElementById('checkout-total').textContent = item.price;
+        
+        // Populate Step 1 (Preview)
+        document.getElementById('preview-item-name').textContent = item.title;
+        document.getElementById('preview-total').textContent = item.price;
+        document.getElementById('checkout-preview-img').src = item.image;
+        
+        const stockWarning = document.getElementById('stock-warning');
+        if (item.stock < 10) {
+            stockWarning.textContent = `Hurry! Only ${item.stock} left in stock!`;
+            stockWarning.style.color = '#ff4d4d';
+        } else {
+            stockWarning.textContent = `In Stock (${item.stock} available)`;
+            stockWarning.style.color = '#888';
+        }
+
+        // Reset to Step 1
+        this.step1.style.display = 'block';
+        this.step2.style.display = 'none';
+        
         this.modal.classList.add('active');
-        document.body.style.overflow = 'hidden'; // Prevent scroll
+        document.body.style.overflow = 'hidden'; 
     }
 
     closeModal() {
@@ -81,13 +128,17 @@ export class MerchStore {
     }
 
     resetForm() {
-        this.form.reset();
+        if (this.form) this.form.reset();
         const status = document.getElementById('payment-status');
-        status.textContent = '';
-        status.className = 'payment-status';
+        if (status) {
+            status.textContent = '';
+            status.className = 'payment-status';
+        }
         const payBtn = document.getElementById('pay-btn');
-        payBtn.disabled = false;
-        payBtn.textContent = 'Confirm & Pay';
+        if (payBtn) {
+            payBtn.disabled = false;
+            payBtn.textContent = 'Confirm & Pay via M-Pesa';
+        }
     }
 
     async handlePayment(e) {
@@ -121,8 +172,14 @@ export class MerchStore {
                 status.textContent = 'Please check your phone for the M-Pesa prompt!';
                 status.className = 'payment-status success';
                 
-                // Here you would normally poll for status
-                // For now we'll just show success of initiation
+                // Decrement stock locally for immediate feedback
+                if (this.selectedItem.stock > 0) {
+                    this.selectedItem.stock--;
+                    // Update main data in case modal is reopened
+                    const target = this.merch.find(m => m.id === this.selectedItem.id);
+                    if (target) target.stockCount = this.selectedItem.stock;
+                    this.render(); // Re-render gallery
+                }
             } else {
                 throw new Error(result.message || 'Payment initiation failed');
             }

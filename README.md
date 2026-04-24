@@ -7,7 +7,7 @@
 </p>
 
 ## 🖼️ Live Preview
-[View Live Site](https://alpha-music.vercel.app)
+[View Live Site](https://alpha-music-one.vercel.app)
 ![Landing Page Preview](preview.png)
 
 This project is a high-end web platform built to showcase and promote the music, brand, and digital presence of **Wax Kandle Alpha**, a Kenyan Reggae and Dancehall artist.

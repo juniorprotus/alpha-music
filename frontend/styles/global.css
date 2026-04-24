@@ -53,8 +53,12 @@
     box-sizing: border-box;
 }
 
-html {
-    scroll-behavior: smooth;
+html,
+body {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
 }
 
 body {
@@ -62,7 +66,6 @@ body {
     background-color: var(--color-bg);
     color: var(--color-text);
     line-height: 1.7;
-    overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -135,7 +138,7 @@ section {
 }
 
 .section-title {
-    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-size: clamp(1.6rem, 5vw, 2.8rem);
     margin-bottom: var(--spacing-lg);
     text-transform: uppercase;
     letter-spacing: 2px;

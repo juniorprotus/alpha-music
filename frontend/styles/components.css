@@ -235,10 +235,10 @@
 }
 
 .hero-title {
-    font-size: clamp(3rem, 8vw, 6rem);
+    font-size: clamp(2.2rem, 10vw, 6rem);
     margin-bottom: 1rem;
     text-transform: uppercase;
-    letter-spacing: 4px;
+    letter-spacing: 2px;
     text-shadow: 0 10px 40px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.5);
 }
 
@@ -911,6 +911,16 @@
         margin-bottom: var(--spacing-md);
     }
 
+    .hero-subtitle {
+        letter-spacing: 3px;
+        font-size: 0.8rem;
+    }
+
+    .logo-text {
+        font-size: 1.2rem;
+        letter-spacing: 2px;
+    }
+
     section {
         padding: var(--spacing-lg) 0;
     }
@@ -922,7 +932,7 @@
         padding: 0 var(--spacing-sm);
     }
 
-    .video-grid {
+    .video-grid-inner {
         grid-template-columns: 1fr;
     }
 

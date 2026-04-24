@@ -9,34 +9,34 @@ export const merch = [
         title: 'Alpha Signature Hoodie',
         price: 'KSh 3,500',
         imageUrl: 'images/merch-hoodie.png',
-        status: 'pre-order'
+        status: 'now-available'
     },
     {
         id: 'm2',
         title: 'Roots & Riddim Tee',
         price: 'KSh 1,500',
         imageUrl: 'images/merch-tee.png',
-        status: 'coming-soon'
+        status: 'now-available'
     },
     {
         id: 'm3',
         title: 'Wax Kandle Snapback',
         price: 'KSh 1,200',
         imageUrl: 'images/merch-hat.png',
-        status: 'coming-soon'
+        status: 'now-available'
     },
     {
         id: 'm4',
         title: 'Alpha Silicon Wristband',
         price: 'KSh 500',
         imageUrl: 'images/merch-wristband.png',
-        status: 'in-stock'
+        status: 'now-available'
     },
     {
         id: 'm5',
         title: 'Eco-Alpha Tote Bag',
         price: 'KSh 1,800',
         imageUrl: 'images/merch-tote.png',
-        status: 'in-stock'
+        status: 'now-available'
     }
 ];
